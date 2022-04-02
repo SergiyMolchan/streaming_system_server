@@ -1,14 +1,16 @@
 import * as WebSocket from 'ws';
-import { WebSocketAdapter, INestApplicationContext } from '@nestjs/common';
+import { WebSocketAdapter } from '@nestjs/common';
 import { MessageMappingProperties } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 
 export class WsAdapter implements WebSocketAdapter {
-    constructor(private app: INestApplicationContext) {}
+    constructor(private nativeHttpServer: any) {}
 
-    create(port: number, options: any = {}): any {
-        return new WebSocket.Server({ port, ...options });
+    create(): any {
+        return new WebSocket.Server({
+            server: this.nativeHttpServer,
+        });
     }
 
     bindClientConnect(server, callback: Function) {
@@ -22,8 +24,7 @@ export class WsAdapter implements WebSocketAdapter {
     ) {
         fromEvent(client, 'message')
             .pipe(
-                mergeMap(data => this.bindMessageHandler(data, handlers, process)),
-                filter(result => result),
+                mergeMap(data => this.bindMessageHandler(data, handlers, process))
             )
             .subscribe(response => client.send(JSON.stringify(response)));
     }

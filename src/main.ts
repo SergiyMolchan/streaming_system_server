@@ -4,7 +4,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { WsAdapter } from './ws-adapter';
+import { WsAdapter } from './ws.adapter';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -13,9 +13,8 @@ async function bootstrap() {
       new FastifyAdapter()
   );
 
-  app.useWebSocketAdapter(new WsAdapter(app));
-
-  await app.listen(app.get(ConfigService).get('app.port'));
+  app.useWebSocketAdapter(new WsAdapter(app.getHttpServer()));
+  await app.listen(app.get(ConfigService).get('port'), app.get(ConfigService).get('host'));
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
