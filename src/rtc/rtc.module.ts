@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { RtcService } from './rtc.service';
+import { RtcGateway } from './rtc.gateway';
 
 @Module({
-    providers: [RtcService],
+    providers: [RtcGateway],
 })
 export class EventsModule {}

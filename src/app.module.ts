@@ -3,14 +3,14 @@ import { ConfigModule } from '@nestjs/config';
 import appConfig from './config/app';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RtcService } from "./rtc/rtc.service";
+import { RtcGateway } from "./rtc/rtc.gateway";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
     }),
-    RtcService,
+    RtcGateway,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,7 +7,7 @@ import {
 import { Server } from 'ws';
 
 @WebSocketGateway()
-export class RtcService {
+export class RtcGateway {
     @WebSocketServer()
     server: Server;
 
