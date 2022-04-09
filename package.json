@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "db:migrations:create": "node ./db-scripts/create-migrations.js",
     "dev:services:stop": "docker-compose --file ./infrastructure/docker-compose.yml stop",
     "dev:services:rm": "docker-compose --file ./infrastructure/docker-compose.yml rm -f",
     "dev:services:kill": "npm run dev:services:stop && npm run dev:services:rm",
