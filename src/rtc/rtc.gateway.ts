@@ -11,9 +11,9 @@ export class RtcGateway {
     @WebSocketServer()
     server: Server;
 
-    @SubscribeMessage('events')
-    onEvent(client: any, data: any): WsResponse<string> {
+    @SubscribeMessage('webrtc')
+    onOffer(client: any, data: any): WsResponse<string> {
         console.log('data', data);
-        return { event: 'events1', data: 'DATA' };
+        return { event: 'webrtc', data: 'ok' };
     }
 }
