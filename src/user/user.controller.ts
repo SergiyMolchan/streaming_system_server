@@ -13,7 +13,6 @@ export class UserController {
     @Post('registration')
     async registration(@Body() newUser: NewUserDto): Promise<Response> {
         try {
-            console.log('newUserDto', newUser)
             const data = await this.userService.registration(newUser);
             return {
                 message: 'Registered',

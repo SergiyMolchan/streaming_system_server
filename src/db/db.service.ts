@@ -8,7 +8,6 @@ export class DbService {
     constructor(
         private readonly config: ConfigService,
     ) {
-        console.log(this.config)
         this.options = {
             user: this.config.get('pg_user'),
             database: this.config.get('pg_database'),
@@ -21,14 +20,13 @@ export class DbService {
 
     // todo: add semaphore
     public async query(query: string, params?: any[]): Promise<QueryArrayResult> {
-        let client: PoolClient;
+        const pool = new Pool(this.options);
+        let client: PoolClient = await pool.connect();
         try {
-            const pool = new Pool(this.options);
-            client = await pool.connect();
             return await client.query(query, params);
         } catch (error) {
             throw `Database ${error}`;
-        }  finally {
+        } finally {
             client.release();
         }
     }
