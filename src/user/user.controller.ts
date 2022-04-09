@@ -1,18 +1,26 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {Body, Controller, HttpException, HttpStatus, Post} from '@nestjs/common';
 import { NewUserDto } from "./user.dto";
+import { UserService } from "./user.service";
 import { Response } from "../common/interfaces/response";
 
 @Controller()
 export class UserController {
-    constructor() {
+    constructor(
+        private readonly userService: UserService,
+    ) {
     }
 
     @Post('registration')
-    registration(@Body() newUser: NewUserDto): Response {
-        console.log('newUserDto', newUser)
-        return {
-            message: 'Registered',
-            data: newUser
+    async registration(@Body() newUser: NewUserDto): Promise<Response> {
+        try {
+            console.log('newUserDto', newUser)
+            const data = await this.userService.registration(newUser);
+            return {
+                message: 'Registered',
+                data
+            }
+        } catch (error) {
+            throw new HttpException(error, HttpStatus.BAD_REQUEST);
         }
     }
 

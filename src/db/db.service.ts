@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from "@nestjs/config";
-import { PoolConfig, Pool, QueryArrayResult } from 'pg'
+import {PoolConfig, Pool, QueryArrayResult, PoolClient} from 'pg'
 
 @Injectable()
 export class DbService {
@@ -8,25 +8,26 @@ export class DbService {
     constructor(
         private readonly config: ConfigService,
     ) {
+        console.log(this.config)
         this.options = {
-            user: this.config.get('user'),
-            database: this.config.get('database'),
-            password: this.config.get('password'),
-            host: this.config.get('host'),
-            // @ts-ignore
-            port: this.config.get('port'),
+            user: this.config.get('pg_user'),
+            database: this.config.get('pg_database'),
+            password: this.config.get('pg_password'),
+            host: this.config.get('pg_host'),
+            port: this.config.get('pg_port'),
             max: 20
         }
     }
 
     // todo: add semaphore
     public async query(query: string, params?: any[]): Promise<QueryArrayResult> {
-        const pool = new Pool(this.options);
-        const client = await pool.connect();
+        let client: PoolClient;
         try {
+            const pool = new Pool(this.options);
+            client = await pool.connect();
             return await client.query(query, params);
         } catch (error) {
-            throw new Error(error);
+            throw `Database ${error}`;
         }  finally {
             client.release();
         }

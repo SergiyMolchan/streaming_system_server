@@ -9,10 +9,7 @@ import postgresql from "../config/postgresql";
       load: [postgresql],
     }),
   ],
-  providers: [{
-    provide: DbService,
-    useValue: new DbService(new ConfigService())
-  }],
+  providers: [DbService],
   exports: [DbService]
 })
 export class DbModule {}
