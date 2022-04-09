@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  posrgres:
+    image: postgres:alpine
+    container_name: streaming-system-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:alpine
+    container_name: streaming-system-cache
+    hostname: redis
+    ports:
+      - 6380:6379
