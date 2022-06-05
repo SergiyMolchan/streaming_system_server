@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import appConfig from './config/app';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RtcGateway } from "./rtc";
-import { WebrtcService, WebrtcModule } from './webrtc';
+import { EventsModule } from "./rtc";
+import { WebRTCModule, WebRTCService } from './webrtc';
 import { DbModule } from './db';
 import { UserModule } from './user';
 
@@ -14,12 +16,16 @@ import { UserModule } from './user';
     ConfigModule.forRoot({
       load: [appConfig],
     }),
-    RtcGateway,
-    WebrtcModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static', 'peer-to-server'),
+      serveRoot: '/static'
+    }),
+    EventsModule,
+    WebRTCModule,
     DbModule,
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, WebrtcService],
+  providers: [AppService],
 })
 export class AppModule {}

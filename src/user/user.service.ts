@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { ConfigService } from "@nestjs/config";
 
 import { UserRepository } from "./user.repository";
 import { NewUserDto } from "./user.dto";
-import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
@@ -16,20 +16,20 @@ export class UserService {
         this.saltRounds = this.configService.get('saltRounds');
     }
 
+    public async authentication() {
+
+    }
+
     public async registration(newUser: NewUserDto) {
         try {
             const existUser = await this.userRepository.getUserByLogin(newUser);
             if (existUser) {
-                throw 'A user with such a login already exists.'
+                throw new Error('A user with such a login already exists.');
             }
             newUser.password = await this.encryptPassword(newUser.password);
             await this.userRepository.create(newUser);
         } catch (error) {
-            console.log(error)
-            throw {
-                message: 'Failed to register user.',
-                error
-            }
+            throw new Error(`Failed to register user. Error: ${error}`);
         }
     }
 
